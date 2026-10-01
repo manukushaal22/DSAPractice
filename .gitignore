@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+.idea/
+scratch/
+
+# solverapp (local practice UI) - build output, deps and runtime state
+solverapp/.venv/
+solverapp/.data/
+solverapp/web/node_modules/
+solverapp/web/dist/
+solverapp/web/*.tsbuildinfo
+
+# Keep the workspace settings (they disable AI autocomplete for practice)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json

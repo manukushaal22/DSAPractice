@@ -1,0 +1,22 @@
+{
+  // This is a practice repo - inline AI completions would hand you the answer.
+  // Chat still works (that's your coach); only ghost-text autocomplete is off.
+  // To temporarily re-enable, flip the "*" values to true and reload the window.
+  "github.copilot.enable": {
+    "*": false,
+    "python": false,
+    "markdown": false,
+    "plaintext": false
+  },
+  "github.copilot.nextEditSuggestions.enabled": false,
+  "editor.inlineSuggest.enabled": false,
+  "editor.suggest.preview": false,
+
+  "python.defaultInterpreterPath": "C:\\Users\\khulsoor\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  }
+}

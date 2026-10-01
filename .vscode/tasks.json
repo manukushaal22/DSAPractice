@@ -1,0 +1,45 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Test current problem",
+      "type": "shell",
+      "command": "py",
+      "args": ["${workspaceFolder}\\run.py", "${fileDirnameBasename}"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "test", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test all problems",
+      "type": "shell",
+      "command": "py",
+      "args": ["${workspaceFolder}\\run.py"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "List problems",
+      "type": "shell",
+      "command": "py",
+      "args": ["${workspaceFolder}\\run.py", "--list"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start solver app",
+      "detail": "Serves the browser UI at http://127.0.0.1:8000",
+      "type": "shell",
+      "command": "${workspaceFolder}\\solverapp\\.venv\\Scripts\\python.exe",
+      "args": ["${workspaceFolder}\\solverapp\\serve.py"],
+      "options": { "cwd": "${workspaceFolder}\\solverapp" },
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": []
+    }
+  ]
+}
