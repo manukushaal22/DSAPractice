@@ -1,4 +1,11 @@
-import type { ProblemDetail, ProblemSummary, RunEvent, SaveConflict } from "./types";
+import type {
+  ProblemDetail,
+  ProblemSummary,
+  RunEvent,
+  SaveConflict,
+  TopicDetail,
+  TopicSummary,
+} from "./types";
 
 async function json<T>(response: Response): Promise<T> {
   if (!response.ok) {
@@ -11,6 +18,15 @@ async function json<T>(response: Response): Promise<T> {
 export async function fetchProblems(): Promise<ProblemSummary[]> {
   const data = await json<{ problems: ProblemSummary[] }>(await fetch("/api/problems"));
   return data.problems;
+}
+
+export async function fetchTopics(): Promise<TopicSummary[]> {
+  const data = await json<{ topics: TopicSummary[] }>(await fetch("/api/learn"));
+  return data.topics;
+}
+
+export async function fetchTopic(id: string): Promise<TopicDetail> {
+  return json<TopicDetail>(await fetch(`/api/learn/${encodeURIComponent(id)}`));
 }
 
 export async function fetchProblem(id: string): Promise<ProblemDetail> {

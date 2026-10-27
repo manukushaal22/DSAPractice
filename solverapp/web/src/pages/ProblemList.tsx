@@ -2,23 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { fetchProblems } from "../api";
-import type { LastRun, ProblemSummary } from "../types";
-
-function difficultyClass(difficulty: string): string {
-  const key = difficulty.trim().toLowerCase();
-  return ["easy", "medium", "hard"].includes(key) ? key : "unknown";
-}
-
-function LastRunCell({ run }: { run: LastRun | null }) {
-  if (!run) return <span className="none">—</span>;
-  if (run.verdict === "stub") return <span className="none">stub</span>;
-  const ok = run.verdict === "pass";
-  return (
-    <span className={ok ? "ok" : "bad"} title={`last run ${run.at.replace("T", " ")}`}>
-      {run.passed}/{run.total} {ok ? "✓" : "✗"}
-    </span>
-  );
-}
+import { difficultyClass, LastRunCell } from "../components/badges";
+import NavTabs from "../components/NavTabs";
+import type { ProblemSummary } from "../types";
 
 export default function ProblemList() {
   const [problems, setProblems] = useState<ProblemSummary[] | null>(null);
@@ -67,10 +53,11 @@ export default function ProblemList() {
   return (
     <div className="list-page">
       <header>
+        <NavTabs />
         <h1>DSA Practice</h1>
         <div className="subtitle">
-          {problems.length} problems · {solved} solved · read live from{" "}
-          <code>problems/</code>, so a new folder shows up on refresh
+          {problems.length} problems · {solved} solved · the mixed interview drill, read live
+          from <code>problems/</code>, so a new folder shows up on refresh
         </div>
       </header>
 

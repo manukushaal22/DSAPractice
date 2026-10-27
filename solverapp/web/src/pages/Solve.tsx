@@ -164,11 +164,16 @@ export default function Solve() {
   if (!problem) return <div className="centered">Loading…</div>;
 
   const dirty = code !== savedCode;
+  const backTo = problem.track === "learn" ? `/learn/${problem.topic}` : "/";
 
   return (
     <div className="solve-page">
       <div className="solve-header">
-        <Link className="back" to="/" title="Back to problems">
+        <Link
+          className="back"
+          to={backTo}
+          title={problem.track === "learn" ? "Back to the topic" : "Back to problems"}
+        >
           ←
         </Link>
         <span className="pid">{problem.id}</span>
@@ -227,7 +232,7 @@ export default function Solve() {
         first={
           <>
             <div className="pane-title">Description</div>
-            <MarkdownPane source={problem.readme} />
+            <MarkdownPane source={problem.readme} baseDir={problem.relDir} />
           </>
         }
         second={

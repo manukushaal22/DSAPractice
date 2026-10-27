@@ -1,8 +1,8 @@
 """FastAPI app for the local solver UI.
 
-Read-only over ``problems/`` except for one endpoint: ``PUT .../solution``, which
-is the only thing in this app that ever writes into a problem folder, and only
-when the human presses Save.
+Read-only over ``problems/`` and ``learn/`` except for one endpoint:
+``PUT .../solution``, which is the only thing in this app that ever writes into a
+problem or exercise folder, and only when the human presses Save.
 """
 
 from __future__ import annotations
@@ -86,6 +86,23 @@ def list_problems() -> dict:
     last_runs = state.all_last_runs()
     problems = catalog.load_problems()
     return {"problems": [_summary(p, last_runs) for p in problems]}
+
+
+@app.get("/api/learn")
+def list_topics() -> dict:
+    last_runs = state.all_last_runs()
+    return {"topics": [catalog.topic_dict(t, last_runs) for t in catalog.load_topics()]}
+
+
+@app.get("/api/learn/{topic_id}")
+def get_topic(topic_id: str) -> dict:
+    topic = catalog.find_topic(topic_id)
+    if topic is None:
+        raise HTTPException(status_code=404, detail=f"no learn topic matching {topic_id!r}")
+    return {
+        **catalog.topic_dict(topic, state.all_last_runs()),
+        "lesson": catalog.lesson_text(topic),
+    }
 
 
 @app.get("/api/problems/{problem_id}")

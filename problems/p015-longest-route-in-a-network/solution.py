@@ -23,27 +23,5 @@ def longest_route(n: int, links: List[List[int]]) -> int:
         The largest latency over all pairs of stations, or ``0`` when there is
         only one station.
     """
-    adj = [[] for _ in range(n)]
-    for a, b, w in links:
-        adj[a].append((b, w))
-        adj[b].append((a, w))
-
-    def sweep(start):
-        dist = [-1] * n
-        dist[start] = 0
-        stack = [start]
-        far, best = start, 0
-        while stack:
-            u = stack.pop()
-            du = dist[u]
-            if du > best:
-                best, far = du, u
-            for v, w in adj[u]:
-                if dist[v] < 0:
-                    dist[v] = du + w
-                    stack.append(v)
-        return far, best
-
-    u, _ = sweep(0)
-    _, diameter = sweep(u)
-    return diameter
+    # TODO: implement me
+    raise NotImplementedError

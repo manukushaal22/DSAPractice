@@ -19,7 +19,36 @@ export interface ProblemSummary {
   complexity: string;
   solvedOn: string;
   isStub: boolean;
+  track: "problems" | "learn";
+  /** learn only: "01" */
+  topic: string;
+  /** learn only: "3", "3b" */
+  rung: string;
+  relDir: string;
   lastRun: LastRun | null;
+}
+
+export type TopicStatus = "upcoming" | "in-progress" | "complete";
+
+export interface TopicSummary {
+  id: string;
+  number: number;
+  title: string;
+  folder: string;
+  phase: string;
+  needs: string[];
+  startRung: number;
+  related: string[];
+  hasLesson: boolean;
+  status: TopicStatus;
+  required: number;
+  requiredSolved: number;
+  isCurrent: boolean;
+  exercises: ProblemSummary[];
+}
+
+export interface TopicDetail extends TopicSummary {
+  lesson: string;
 }
 
 export interface ProblemDetail extends ProblemSummary {

@@ -1,11 +1,12 @@
 # Solver app
 
-A local, browser-based way to work through the problems in `problems/` — a list screen
-and a LeetCode-style split screen with the statement on the left and a code editor on
-the right.
+A local, browser-based way to work through the repo — a **Learn** roadmap (topics, progress,
+each topic's lesson and ladder), a problem list, and a LeetCode-style split screen with the
+statement on the left and a code editor on the right.
 
-It reads `problems/` as its only data source. Add a new problem folder in the usual
-shape and it shows up on the next page refresh; nothing to register, no restart.
+It reads `problems/`, `learn/` and `PROGRESS.md` as its only data sources. Add a new problem,
+topic, or exercise folder in the usual shape and it shows up on the next page refresh;
+nothing to register, no restart.
 
 ```
 solverapp/
@@ -13,7 +14,7 @@ solverapp/
   requirements.txt    fastapi, uvicorn
   server/
     app.py            FastAPI routes
-    catalog.py        problem discovery + README/PROGRESS.md parsing
+    catalog.py        discovery + README / learn roadmap / PROGRESS.md parsing
     child_runner.py   runs a test suite against submitted code (see below)
     execute.py        subprocess spawn, NDJSON relay, cancellation
     state.py          last-run badges (solverapp/.data/state.json)
@@ -50,13 +51,30 @@ npm run dev          # http://localhost:5173, proxies /api to port 8000
 
 ## How it works
 
+### Screens
+
+| Route | Screen |
+| --- | --- |
+| `/learn` | Roadmap by phase: per-topic progress (required rungs solved), status, start rung, prerequisites, related drill problems, and a **Continue** card for the current topic |
+| `/learn/NN` | One topic: its ladder of exercises with status and last run, then the lesson |
+| `/` | The `problems/` drill list |
+| `/p/{id}` | Solve screen, for a problem (`p009`) or a learn exercise (`L01.3`) |
+
+Relative links inside READMEs (lesson ↔ exercise, lesson → `problems/`) are rewritten into
+in-app navigation. Topic progress is derived, not stored: a topic's required rungs are its
+*Starts at* rung through `.5` (from the curriculum table in `learn/README.md`), and a rung
+counts as solved when it or a sibling (`03.3b`) is `solved` in `PROGRESS.md`. The current
+topic comes from the `**Current topic:**` line in `PROGRESS.md`.
+
+### Run and Save
+
 **Run** never touches your files. The editor buffer is written to a throwaway temp file
 and `child_runner.py` registers it in `sys.modules` under the name `solution` *before*
 importing the problem's `tests.py`. The test suite's `from solution import <fn>` then
-resolves to your buffer, and `problems/pNNN-slug/solution.py` is never read.
+resolves to your buffer, and the folder's `solution.py` is never read.
 
-**Save** is the only thing that writes to a problem folder, and it writes `solution.py`
-only. It preserves the file's existing line endings and refuses to clobber a file that
+**Save** is the only thing that writes to a problem or exercise folder, and it writes
+`solution.py` only. It preserves the file's existing line endings and refuses to clobber a file that
 changed on disk since the tab was opened (you get an *Overwrite* / *Reload* choice).
 
 Cases run through `dsakit.limits.call_with_limits`, the same guard the CLI uses, so the
@@ -82,12 +100,14 @@ no-autocomplete stance for practice. There is a toggle above the editor.
 
 | Method | Path | |
 | --- | --- | --- |
-| `GET` | `/api/problems` | list with metadata and last-run badges |
+| `GET` | `/api/problems` | `problems/` list with metadata and last-run badges |
+| `GET` | `/api/learn` | curriculum topics with derived progress and their exercises |
+| `GET` | `/api/learn/{topic}` | one topic plus its lesson markdown (`1`, `01` or folder name) |
 | `GET` | `/api/problems/{id}` | README, current `solution.py`, mtime |
 | `POST` | `/api/problems/{id}/run` | NDJSON stream: `start` → `case`×N → `done` |
 | `PUT` | `/api/problems/{id}/solution` | save; `409` if changed on disk |
 
-`id` accepts `p009`, `9`, or the full folder slug. Interactive docs at `/docs`.
+`id` accepts `p009`, `9`, `L01.3`, `L1.3`, or the full folder slug. Interactive docs at `/docs`.
 
 ## Notes
 
